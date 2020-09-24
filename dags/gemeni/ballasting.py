@@ -9,7 +9,11 @@ import pathlib
 logger = logging.getLogger("airflow.task")
 
 def connect_to_server(**kwargs):
-    pass
+    if True:
+        return 'mount'
+    else:
+        return 'finish'
+
 
 
 def read_source_folder(**kwargs):
@@ -21,7 +25,10 @@ def read_dist_folder(**kwargs):
 
 
 def compare_log_files(**kwargs):
-    pass
+    if True:
+        return 'copy'
+    else:
+        return 'finish'
 
 
 def copy(**kwargs):

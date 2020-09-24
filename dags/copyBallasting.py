@@ -7,7 +7,7 @@ from airflow.operators.bash_operator import BashOperator
 
 
 args = {
-    'owner': 'Airflow',
+    'owner': 'air',
     'start_date': datetime.now(),
     'provide_context': True,
 }
@@ -16,7 +16,8 @@ dag = DAG(
     dag_id='copyBallastingLogs',
     default_args=args,
     schedule_interval='* * * * *',
-    tags=['gemeni']
+    tags=['gemeni'],
+    catchup=False
 )
 
 connect = BranchPythonOperator(task_id='connect',
@@ -25,7 +26,10 @@ connect = BranchPythonOperator(task_id='connect',
                                dag=dag)
 
 mount = BashOperator(task_id='mount',
-                    bash_command='sudo mount -t cifs -o username=bpasa_chifobserver,password=barbaros //10.103.1.17/share /home/user/zdrive',
+                    bash_command='mount -t cifs -o username=bpasa_chifobserver,password=barbaros //10.103.1.17/share /home/user/zdrive',
+                    run_as_user='air',
+                    #bash_command='whoami',
+                    xcom_push=True,
                     dag=dag)
 
 list_source_folder = PythonOperator(task_id='read_source',
@@ -50,6 +54,7 @@ copy = PythonOperator(task_id='copy_files',
 
 unmount = BashOperator(task_id='unmount',
                     bash_command='umount /home/user/zdrive',
+                    run_as_user='air',
                     dag=dag)
 
 finish = DummyOperator(task_id='finish',
