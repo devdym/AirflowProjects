@@ -51,7 +51,7 @@ def read_source_folder(**kwargs):
 
 
 def read_dist_folder(**kwargs):
-    destanation = Variable.get("GLdestanation_path")
+    destanation = Variable.get("data_repository_path")
 
     files = []
     for child in pathlib.Path(destanation).iterdir():
@@ -80,7 +80,7 @@ def compare_log_files(**kwargs):
 def copy(**kwargs):
     # pass
     files = kwargs['ti'].xcom_pull(key='files_list', task_ids='get_missing_files')
-    destanation = Variable.get("GLdestanation_path")
+    destanation = Variable.get("data_repository_path")
     server = Variable.get("GLserver")
     source = Variable.get("GLsource_path")
 

@@ -2,7 +2,8 @@ from airflow.models import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator, BranchPythonOperator
 from datetime import datetime
-from gemeni.GunLinkLogs import *
+from gemeni.ballasting import *
+from airflow.operators.bash_operator import BashOperator
 
 
 args = {
@@ -12,7 +13,7 @@ args = {
 }
 
 dag = DAG(
-    dag_id='copyGunLinkLog',
+    dag_id='copyBallastingLogs',
     default_args=args,
     schedule_interval='* * * * *',
     tags=['gemeni']
@@ -22,6 +23,10 @@ connect = BranchPythonOperator(task_id='connect',
                                python_callable=connect_to_server,
                                provide_context=True,
                                dag=dag)
+
+mount = BashOperator(task_id='mount',
+                    bash_command='sudo mount -t cifs -o username=bpasa_chifobserver,password=barbaros //10.103.1.17/share /home/user/zdrive',
+                    dag=dag)
 
 list_source_folder = PythonOperator(task_id='read_source',
                              python_callable=read_source_folder,
@@ -43,11 +48,17 @@ copy = PythonOperator(task_id='copy_files',
                       provide_context=True,
                       dag=dag)
 
+unmount = BashOperator(task_id='unmount',
+                    bash_command='umount /home/user/zdrive',
+                    dag=dag)
+
 finish = DummyOperator(task_id='finish',
                        dag=dag)
 
-connect >> [list_source_folder, finish]
+connect >> [mount, finish]
+mount >> list_source_folder
 list_source_folder >> list_dist_folder
 list_dist_folder >> get_missing_files
-get_missing_files >> [copy, finish]
-copy >> finish
+get_missing_files >> [copy, unmount]
+copy >> unmount
+unmount >> finish
