@@ -1,0 +1,16 @@
+{
+  "uploadOnSave": true,
+  "useAtomicWrites": true,
+  "deleteLocal": true,
+  "hostname": "10.103.1.30",
+  "port": "22",
+  "target": "airflow/",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "user",
+  "password": "Observer.bhp",
+  "watch": [],
+  "transport": "scp"
+}
