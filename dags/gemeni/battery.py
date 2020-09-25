@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 import ftplib
 import pathlib
+import datetime as dt
 
 logger = logging.getLogger("airflow.task")
 
@@ -22,8 +23,16 @@ def connect_to_server(**kwargs):
 
 def read_source_folder(**kwargs):
     source = Variable.get("DigiCourseSourceFolder")
+
+
+    d = dt.datetime.now()
+    cur_month = d.strftime("%B")
+
+
     dist = []
     for child in pathlib.Path(source).iterdir():
+        if child.is_dir() and child == cur_month:
+
         if child.is_file():
             dist.append(os.path.split(child)[-1:][0])
     logger.info(dist)
