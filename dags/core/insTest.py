@@ -5,9 +5,11 @@ import logging
 from pathlib import Path
 from core.utils import read_db, check_project_id, save_project_name_toMySql, check_log_id, save_log_toMySql
 from sqlalchemy import create_engine
+from airflow.models import Variable
 
+source = Variable.get("data_repository_path")
 logger = logging.getLogger("airflow.task")
-basepath = Path('/home/user/data_repository/projects/')
+basepath = Path(source)
 
 
 def scan(**kwargs):

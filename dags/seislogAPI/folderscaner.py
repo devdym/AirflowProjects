@@ -44,7 +44,8 @@ def scan_folder(basepath):
                 data_dict['result_name'] = result.parent.name
                 data_dict['file_name'] = result.name
                 data_dict['file_path'] = result
-            all_res[str(result)] = data_dict
+            if len(all_res) < 10:
+                all_res[str(result)] = data_dict
 
     return all_res
 

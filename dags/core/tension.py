@@ -7,15 +7,17 @@ from core.utils import read_db, check_project_id, save_project_name_toMySql, che
 from sqlalchemy import create_engine
 from airflow.models import Variable
 
-source = Variable.get("data_source")
+source = Variable.get("data_repository_path")
 logger = logging.getLogger("airflow.task")
 basepath = Path(source)
 
 
 def scan(**kwargs):
     files = scan_folder(basepath)
-    # filter instest logs
+    # filter tension logs
     files = dict(filter(lambda elem: "tension" in elem[0], files.items()))
+    for f in files:
+        logger.info(f)
     kwargs['ti'].xcom_push(key='import_files', value=files)
 
 

@@ -4,18 +4,20 @@ from airflow.operators.python_operator import PythonOperator, BranchPythonOperat
 from core.battery import scan, read_data, move
 from core.utils import files_func
 from datetime import datetime
+from airflow.utils.dates import days_ago
 
 
 args = {
     'owner': 'Airflow',
     'start_date': datetime.now(),
     'provide_context': True,
+    'start_date': days_ago(2),
 }
 
 dag = DAG(
     dag_id='BatteryImport',
     default_args=args,
-    schedule_interval='* * * * *',
+    schedule_interval='@daily',
     tags=['seislog']
 )
 

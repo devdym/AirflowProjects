@@ -4,19 +4,22 @@ from airflow.operators.python_operator import PythonOperator, BranchPythonOperat
 from datetime import datetime
 from core.ballasting import scan, read_data, move
 from core.utils import files_func
+from airflow.utils.dates import days_ago
 
 
 args = {
     'owner': 'Airflow',
     'start_date': datetime.now(),
     'provide_context': True,
+    'start_date': days_ago(2),
 }
 
 dag = DAG(
     dag_id='BallastingImport',
     default_args=args,
-    schedule_interval='* * * * *',
-    tags=['seislog']
+    schedule_interval='*/180 * * * *',
+    tags=['seislog'],
+    catchup=False
 )
 
 scan_folder = PythonOperator(task_id='scan_folder',

@@ -4,18 +4,20 @@ from airflow.operators.python_operator import PythonOperator, BranchPythonOperat
 from datetime import datetime
 from gemeni.battery import *
 from airflow.operators.bash_operator import BashOperator
+from airflow.utils.dates import days_ago
 
 
 args = {
     'owner': 'air',
     'start_date': datetime.now(),
     'provide_context': True,
+    'start_date': days_ago(2),
 }
 
 dag = DAG(
     dag_id='copyBatteryLogs',
     default_args=args,
-    schedule_interval='* * * * *',
+    schedule_interval='@daily',
     tags=['gemeni'],
     catchup=False
 )

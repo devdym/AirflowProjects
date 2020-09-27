@@ -7,7 +7,7 @@ from core.utils import read_db, check_project_id, save_project_name_toMySql, che
 from sqlalchemy import create_engine
 from airflow.models import Variable
 
-source = Variable.get("data_source")
+source = Variable.get("data_repository_path")
 logger = logging.getLogger("airflow.task")
 basepath = Path(source)
 
