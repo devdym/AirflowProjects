@@ -18,7 +18,8 @@ dag = DAG(
     dag_id='BatteryImport',
     default_args=args,
     schedule_interval='@daily',
-    tags=['seislog']
+    tags=['seislog'],
+    catchup=False
 )
 
 scan_folder = PythonOperator(task_id='scan_folder',

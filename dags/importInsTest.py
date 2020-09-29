@@ -17,8 +17,9 @@ args = {
 dag = DAG(
     dag_id='InsTestImport',
     default_args=args,
-    schedule_interval='*/180 * * * *',
-    tags=['seislog']
+    schedule_interval='@daily',
+    tags=['seislog'],
+    catchup=False
 )
 
 scan_folder = PythonOperator(task_id='scan_folder',

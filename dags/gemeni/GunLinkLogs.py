@@ -5,27 +5,21 @@ import logging
 from pathlib import Path
 import ftplib
 import pathlib
+import paramiko
 
 logger = logging.getLogger("airflow.task")
 
 def connect_to_server(**kwargs):
-    # server = Variable.get("GLserver")
-    # try:
-    #     ssh_client = paramiko.SSHClient()
-    #     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     ssh_client.connect(hostname=server, username="display", password='')
-    #     return 'read_source'
-    # except:
-    #     return 'finish'
-
     try:
         source = Variable.get("GLsource_path")
         server = Variable.get("GLserver")
         ftp = ftplib.FTP(server)
         ftp.login("display", "")
         ftp.quit()
-        return 'read_source'
+        logger.info('GunLink host is up! - CONTINUE')
+        return 'script'
     except:
+        logger.info('GunLink host is down! - STOP')
         return 'finish'
 
 
@@ -67,6 +61,8 @@ def compare_log_files(**kwargs):
     dist_files = kwargs['ti'].xcom_pull(key='dist_files', task_ids='read_dist')
 
     files_to_copy = [x for x in source_files if x not in dist_files]
+
+
     logger.info(files_to_copy)
 
     kwargs['ti'].xcom_push(key='files_list', value=files_to_copy)
@@ -78,13 +74,12 @@ def compare_log_files(**kwargs):
 
 
 def copy(**kwargs):
-    # pass
     files = kwargs['ti'].xcom_pull(key='files_list', task_ids='get_missing_files')
     destanation = Variable.get("data_repository_path")
     server = Variable.get("GLserver")
     source = Variable.get("GLsource_path")
 
-    ssh_client =paramiko.SSHClient()
+    ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(hostname=server, username="display", password='')
     ftp_client=ssh_client.open_sftp()

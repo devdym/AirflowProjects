@@ -6,8 +6,9 @@
   "port": "22",
   "target": "airflow/",
   "ignore": [
-    ".remote-sync.json",
-    ".git/**"
+    ".git/**",
+    "*.pyc",
+    "logs/**"
   ],
   "username": "user",
   "password": "Observer.bhp",

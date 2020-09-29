@@ -1,0 +1,9 @@
+{
+    "DigiCourseIP": "10.103.128.62",
+    "DigiCourseSourceFolder": "/home/user/Digicourse/",
+    "GLserver": "10.103.128.65",
+    "GLsource_path": "/var/gunlink/printfiles/",
+    "current_survey": "BPA000820_LEFKOSA-4-EK_3D",
+    "data_repository_path": "/home/user/data_repository/projects/",
+    "shared_folder": "//10.103.1.17/share"
+}

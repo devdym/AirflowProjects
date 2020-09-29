@@ -17,7 +17,7 @@ args = {
 dag = DAG(
     dag_id='copyBallastingLogs',
     default_args=args,
-    schedule_interval='*/180 * * * *',
+    schedule_interval='* * * * *',
     tags=['gemeni'],
     catchup=False
 )
